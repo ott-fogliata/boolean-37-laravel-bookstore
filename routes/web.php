@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+
+//Route::resource('books', 'BackofficeController');
+Route::resource('books', BackofficeController::class);

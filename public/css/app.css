@@ -10942,3 +10942,8 @@ a.text-dark:focus {
   }
 }
 
+.table-index .pic-table {
+  max-width: 200px;
+  width: 100%;
+}
+
