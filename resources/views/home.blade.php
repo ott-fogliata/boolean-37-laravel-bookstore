@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container">
-    <!-- lista dei libri --> 
-
+    <!-- lista dei libri -->
+    
     <div class="row">
 
         @foreach($books as $book)
