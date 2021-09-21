@@ -4,6 +4,15 @@
 <div class="container">
     <!-- lista dei libri del backoffice --> 
 
+    {{ $dateNow->format('Y-m-d') }}
+
+    @if($isWeekendFlag)
+        it's weekend!
+    @else 
+        it's a work day
+    @endif
+    <br/>
+
     <a href="{{ route('books.create') }}" >
         <button type="button" class="btn btn-primary">Add new</button>
     </a>

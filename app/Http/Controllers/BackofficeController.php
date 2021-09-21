@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Book;
+use Carbon\Carbon;
 
 class BackofficeController extends Controller
 {
@@ -21,7 +22,11 @@ class BackofficeController extends Controller
     public function index()
     {
         $books = Book::all();
-        return view('book.index', compact('books'));
+
+        $dateNow = Carbon::now();
+        $isWeekendFlag = $dateNow->isWeekend();  // true | false
+
+        return view('book.index', compact('books', 'dateNow', 'isWeekendFlag'));
     }
 
     /**
