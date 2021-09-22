@@ -1,6 +1,8 @@
 <?php
 
 use App\Book;
+use App\BookDetail;
+use App\Category;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 
@@ -26,7 +28,7 @@ class BookSeeder extends Seeder
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOQKqCZ2B1uAqyUvO1tj7gtELvPTg5XLMLiMomQghD0WC6fZDwNwyKCiDGiTWQA4665OM&usqp=CAU',
         ];
 
-        $genereList = [
+        $categoryList = [
             'thriller',
             'avventura',
             'azione',
@@ -35,25 +37,48 @@ class BookSeeder extends Seeder
             'biografia'
         ];
 
-        for($i = 0; $i < 10; $i++) {
+        
+        $listOfCategoryID = [];  // 1, 2, 3, 4, 5, 6
 
+        foreach($categoryList as $category) {
+            $categoryObject = new Category();
+            $categoryObject->name = $category;
+            $categoryObject->save();
+            $listOfCategoryID[] = $categoryObject->id;
+        }
+    
+
+
+        for($i = 0; $i < 50; $i++) {
+
+            // Prima creo il book detail
+            $bookDetail = new BookDetail();
+            $bookDetail->form_factor = $faker->words(1, true);
+            $bookDetail->publisher = $faker->words(1, true);
+            $bookDetail->publication_year = $faker->date('Y');
+            $bookDetail->available_copies = $faker->numberBetween(0, 100);
+            $bookDetail->save(); // salvo
+
+            // creo il book
             $book = new Book();
             $book->title = $faker->sentence();
             $book->author = $faker->name(); 
             $book->abstract = $faker->paragraph(3);
 
-            $randGenereKey = array_rand($genereList, 1);
-            $genere = $genereList[$randGenereKey];
-            $book->genere = $genere;
-
             $randPictureKey = array_rand($pictureList, 1);
             $picture = $pictureList[$randPictureKey];
             $book->picture = $picture;
 
+            $randCategoryKey = array_rand($listOfCategoryID, 1);
+            $categoryID = $listOfCategoryID[$randCategoryKey];
+            $book->category_id = $categoryID;
+
             $book->price = $faker->randomFloat(2, 5, 50);
             
-            $book->save();
+            // inserisco l'id del detail all'interno del campo foreign key
+            $book->book_detail_id = $bookDetail->id;
 
+            $book->save();
 
         }
 

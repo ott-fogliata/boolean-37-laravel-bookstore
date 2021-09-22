@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Book;
+use App\BookDetail;
+use App\Category;
 use Carbon\Carbon;
 
 class BackofficeController extends Controller
@@ -36,7 +38,8 @@ class BackofficeController extends Controller
      */
     public function create()
     {
-        return view('book.create');
+        $categories = Category::all();
+        return view('book.create', compact('categories'));
     }
 
     /**
@@ -52,14 +55,15 @@ class BackofficeController extends Controller
             'title' => 'required',
             'author' => 'required',
             'abstract' => 'required',
-            'genere' => 'required',
             'picture' => ['required', 'url'],
             'price' => 'required',
         ]);
 
 
         $book = new Book();
-        $this->saveItemFromRequest($book, $request);
+        $bookDetail = new BookDetail();
+
+        $this->saveItemFromRequest($book, $bookDetail, $request);
         return redirect()->route('books.show', $book);
 
     }
@@ -95,7 +99,8 @@ class BackofficeController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        $this->saveItemFromRequest($book, $request);
+        
+        $this->saveItemFromRequest($book, $request); // TODO:
         return redirect()->route('books.show', $book);
     }
 
@@ -111,15 +116,23 @@ class BackofficeController extends Controller
         return redirect()->route('books.index');
     }
 
-    private function saveItemFromRequest(Book $book, Request $request) {
+    private function saveItemFromRequest(Book $book, BookDetail $bookDetail, Request $request) {
 
         $data = $request->all(); // data è un array
+
+        $bookDetail->form_factor = $data['form_factor'];
+        $bookDetail->publisher = $data['publisher'];
+        $bookDetail->publication_year = $data['publication_year'];
+        $bookDetail->available_copies = $data['available_copies'];
+        $bookDetail->save();
+
         $book->title = $data['title'];
         $book->author = $data['author'];
         $book->abstract = $data['abstract'];
-        $book->genere = $data['genere'];
         $book->picture = $data['picture'];
         $book->price = $data['price'];
+        $book->book_detail_id = $bookDetail->id;
+        $book->category_id = $data['category_id'];
         $book->save();
     }
 }

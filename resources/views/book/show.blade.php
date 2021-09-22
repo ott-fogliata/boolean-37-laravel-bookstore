@@ -11,6 +11,7 @@
             <p class="card-text">{{ $book->abstract }}</p>
             <p class="card-text">{{ $book->price }}</p>
             <p class="card-text"><strong>{{ $book->genere }}</strong></p>
+            <p>Categoria: {{ $book->category->name }}</p>
             <a href="#" class="btn btn-primary">Buy</a>
         </div>
     </div>
