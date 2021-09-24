@@ -40,11 +40,6 @@
         </div>
 
         <div class="form-group">
-            <label for="author">Author</label>
-            <input type="text" class="form-control" name="author" id="author">
-        </div> 
-
-        <div class="form-group">
             <label for="abstract">Abstract</label>
             <input type="text" class="form-control" name="abstract" id="abstract">
         </div> 
@@ -60,6 +55,17 @@
             <input type="number" step="0.01" class="form-control" name="price" id="price">
         </div> 
 
+        <strong>Autori</strong>
+            <div class="form-group">
+                @foreach($authors as $author)
+                <div>
+                    {{-- authors[] diventerà un array di id di autori per cui abbiamo flaggato la checbox --}}
+                    <input name="authors[]" type="checkbox" value="{{ $author->id }}">
+                    <label>{{$author->name}} {{$author->surname}}</label>
+                </div>
+                @endforeach
+
+            </div>
         <h2>Aggiungi i dettagli</h2>
 
         <div class="form-group">

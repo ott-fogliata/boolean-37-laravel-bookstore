@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Author;
 use Illuminate\Http\Request;
 use App\Book;
 use App\BookDetail;
@@ -39,7 +40,8 @@ class BackofficeController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('book.create', compact('categories'));
+        $authors = Author::all();
+        return view('book.create', compact('categories', 'authors'));
     }
 
     /**
@@ -53,10 +55,10 @@ class BackofficeController extends Controller
 
         $request->validate([
             'title' => 'required',
-            'author' => 'required',
             'abstract' => 'required',
             'picture' => ['required', 'url'],
             'price' => 'required',
+            'authors' => 'required'
         ]);
 
 
@@ -127,12 +129,25 @@ class BackofficeController extends Controller
         $bookDetail->save();
 
         $book->title = $data['title'];
-        $book->author = $data['author'];
         $book->abstract = $data['abstract'];
         $book->picture = $data['picture'];
         $book->price = $data['price'];
         $book->book_detail_id = $bookDetail->id;
         $book->category_id = $data['category_id'];
         $book->save();
+
+        // ricordiamoci prima di salvare, così il nostro book otterrà un ID (dopo la insert)
+
+        if(array_key_exists('authors', $data)) {
+
+            foreach($data['authors'] as $authorId) {
+                $book->author()->attach($authorId);
+            }
+
+        }
+
+        // alternativa 
+        // $book->author()->sync($data['authors']);
+
     }
 }

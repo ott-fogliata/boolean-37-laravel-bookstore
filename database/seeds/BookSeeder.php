@@ -1,5 +1,6 @@
 <?php
 
+use App\Author;
 use App\Book;
 use App\BookDetail;
 use App\Category;
@@ -46,6 +47,17 @@ class BookSeeder extends Seeder
             $categoryObject->save();
             $listOfCategoryID[] = $categoryObject->id;
         }
+
+
+        // creiamo gli autori, e ne agganciamo due a ogni libro
+        $authorsList = [];
+        for($i = 0; $i < 10; $i++) {
+            $author = new Author();
+            $author->name = $faker->firstName();
+            $author->surname = $faker->lastName();
+            $author->save();
+            $authorsList[] = $author->id;
+        }
     
 
 
@@ -62,7 +74,6 @@ class BookSeeder extends Seeder
             // creo il book
             $book = new Book();
             $book->title = $faker->sentence();
-            $book->author = $faker->name(); 
             $book->abstract = $faker->paragraph(3);
 
             $randPictureKey = array_rand($pictureList, 1);
@@ -78,7 +89,22 @@ class BookSeeder extends Seeder
             // inserisco l'id del detail all'interno del campo foreign key
             $book->book_detail_id = $bookDetail->id;
 
-            $book->save();
+            // peschiamo due autori random
+            $randomAuthorKeys = array_rand($authorsList, 2);
+            $author1 = $authorsList[$randomAuthorKeys[0]]; // 1^ chiave estratta
+            $author2 = $authorsList[$randomAuthorKeys[1]]; // 2^ chiave estratta
+            
+            $book->save(); // salviamo per poter avere l'id del book  (insert)
+
+            $book->author()->attach($author1);  // qui non abbiamo bisogno del save -> attach salva da solo.
+            $book->author()->attach($author2);
+
+
+
+
+            //altrimenti
+            // $book->author()->sync([$author1, $author2]);  // attenzione, qui rimuove le assegnazioni precedenti dell'autore.
+
 
         }
 

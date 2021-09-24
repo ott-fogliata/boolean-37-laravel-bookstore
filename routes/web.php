@@ -21,3 +21,5 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::resource('books', BackofficeController::class);
 
 Route::get('/app', 'WebAppController@home');
+
+Route::get('/author/{author}', 'AuthorsController@list');
