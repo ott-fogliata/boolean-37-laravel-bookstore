@@ -16,7 +16,7 @@
 
     <h1>Aggiungi un nuovo libro</h1>
 
-    <form action="{{ route('books.store') }}" method="POST">
+    <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
@@ -45,8 +45,8 @@
         </div> 
 
         <div class="form-group">
-            <label for="picture">Picture</label>
-            <input type="text" class="form-control" name="picture" id="picture">
+            <label for="pictureFile">Picture</label>
+            <input type="file" class="form-control" name="pictureFile" id="pictureFile">
         </div> 
 
 
@@ -64,8 +64,11 @@
                     <label>{{$author->name}} {{$author->surname}}</label>
                 </div>
                 @endforeach
-
             </div>
+
+
+        
+        
         <h2>Aggiungi i dettagli</h2>
 
         <div class="form-group">

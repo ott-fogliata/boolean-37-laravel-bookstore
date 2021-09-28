@@ -10,6 +10,7 @@ use App\Book;
 use App\BookDetail;
 use App\Category;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class BackofficeController extends Controller
 {
@@ -58,7 +59,7 @@ class BackofficeController extends Controller
         $request->validate([
             'title' => 'required',
             'abstract' => 'required',
-            'picture' => ['required', 'url'],
+            'pictureFile' => ['required', 'image'],
             'price' => 'required',
             'authors' => 'required'
         ]);
@@ -136,7 +137,10 @@ class BackofficeController extends Controller
 
         $book->title = $data['title'];
         $book->abstract = $data['abstract'];
-        $book->picture = $data['picture'];
+
+        $picturePath = Storage::put('images', $data['pictureFile']);
+        $book->picture = $picturePath;
+        
         $book->price = $data['price'];
         $book->book_detail_id = $bookDetail->id;
         $book->category_id = $data['category_id'];
