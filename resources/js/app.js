@@ -31,3 +31,4 @@ Vue.component('book-list', require('./components/BookListComponent.vue').default
 const app = new Vue({
     el: '#app',
 });
+
