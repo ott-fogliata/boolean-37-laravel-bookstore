@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewBookCreated;
 use App\Book;
 use App\BookDetail;
 use App\Category;
@@ -66,6 +68,10 @@ class BackofficeController extends Controller
         $bookDetail = new BookDetail();
 
         $this->saveItemFromRequest($book, $bookDetail, $request);
+
+        // dopo che ha salvato il nostro item, inviamo una mail.
+        Mail::to('info@test.it')->send(new NewBookCreated($book));
+
         return redirect()->route('books.show', $book);
 
     }
